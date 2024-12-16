@@ -1,0 +1,25 @@
+let signin = document.getElementById("signin_btn");
+
+signin.addEventListener("click", (e) => {
+    e.preventDefault(); // Prevent form from refreshing the page
+
+    const emailOrPhone = document.getElementById("personalDetails").value.trim();
+    const password = document.getElementById("personalPassword").value;
+
+    // Retrieve users from localStorage
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // Find the user with matching credentials
+    const isPresent = users.find(
+        (user) =>
+            (user.email === emailOrPhone || user.phone === emailOrPhone) &&
+            user.password === password
+    );
+
+    if (isPresent) {
+        alert(`Welcome back, ${isPresent.name}!`);
+        window.location.href = "mainPage.html"; // Redirect to main page
+    } else {
+        alert("Incorrect email/phone number or password! Please try again.");
+    }
+});
