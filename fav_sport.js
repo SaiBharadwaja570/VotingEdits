@@ -1,19 +1,38 @@
 let form = document.querySelector("form");
-let log = document.querySelector("#log");
+const pollData = JSON.parse(localStorage.getItem("pollData")) || { votes: {}, voters: {} };
 
-const sports = JSON.parse(localStorage.getItem("sports"))|| [];
+function addVote(userEmail, favSport) {
+    // Check if the user already voted
+    if (pollData.voters[userEmail]) {
+        alert("You have already voted!");
+        return false;
+    }
 
-function addUser(favSport){
-    sports.push({favSport});
+    // Increment the vote count for the selected option
+    pollData.votes[favSport] = (pollData.votes[favSport] || 0) + 1;
+
+    // Record that the user voted
+    pollData.voters[userEmail] = favSport;
+
+    // Update localStorage
+    localStorage.setItem("pollData", JSON.stringify(pollData));
+    alert("Vote submitted successfully!");
+    return true;
 }
 
 form.addEventListener("submit", (event) => {
-    const data = new FormData(form);
-
-    for(const entry of data){
-        addUser(entry[1]);
-    }
-    localStorage.setItem("sports",JSON.stringify(sports))
     event.preventDefault();
-}
-);
+    const data = new FormData(form);
+    const userEmail = localStorage.getItem("loggedInUser"); // Assume user is logged in
+    let favSport;
+
+    for (const entry of data) {
+        favSport = entry[1]; // Extract selected option
+    }
+
+    if (userEmail && favSport) {
+        addVote(userEmail, favSport);
+    } else {
+        alert("Please log in and select an option.");
+    }
+});
