@@ -7,7 +7,6 @@ signin.addEventListener("click", (e) => {
 
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
-
     const isPresent = users.find(
         (user) =>
             user.email == loginemail &&
